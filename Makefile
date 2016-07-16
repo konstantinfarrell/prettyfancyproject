@@ -26,6 +26,9 @@ travis-install:
 travis-test:
 	$(PYTHON) -m unittest discover
 
+travis-coverage:
+	$(PYTHON) -m coverage run -m unittest discover
+
 coverage:
 	clear
 	$(VENV_DIR)/bin/coverage run -m unittest discover
