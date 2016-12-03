@@ -2,12 +2,14 @@
 
 VENV_DIR ?= .env
 PYTHON = python
+REQUIREMENTS = requirements.txt
 
 run:
 	clear
 	$(VENV_DIR)/bin/$(PYTHON) main.py
 
 init:
+	clear
 	rm -rf $(VENV_DIR)
 	@$(MAKE) $(VENV_DIR)
 
@@ -20,19 +22,19 @@ test:
 	clear
 	$(VENV_DIR)/bin/$(PYTHON) -m unittest discover
 
-travis-install:
-	pip install -r requirements.txt
-
-travis-test:
-	$(PYTHON) -m unittest discover
-
-travis-coverage:
-	$(PYTHON) -m coverage run -m unittest discover
-
 coverage:
 	clear
-	$(VENV_DIR)/bin/coverage run -m unittest discover
-	$(VENV_DIR)/bin/coverage html
+	$(VENV_DIR)/bin/$(PYTHON) -m coverage run -m unittest discover
+	$(VENV_DIR)/bin/$(PYTHON) -m coverage report -m
+
+travis-install:
+	python -m pip install -r requirements.txt
+
+travis-test:
+	python -m unittest discover
+
+travis-coverage:
+	python -m coverage run -m unittest discover
 
 pep8:
 	clear
@@ -42,8 +44,8 @@ $(VENV_DIR):
 	virtualenv $(VENV_DIR)
 	if [ -a $(REQUIREMENTS) ] ; \
 	then \
-		$(VENV_DIR)/bin/pip install -r requirements.txt ; \
+		$(VENV_DIR)/bin/pip install -r $(REQUIREMENTS); \
 	else \
 		$(VENV_DIR)/bin/pip install flake8 coverage; \
-		$(VENV_DIR)/bin/pip freeze > requirements.txt ; \
+		$(VENV_DIR)/bin/pip freeze > $(REQUIREMENTS); \
 	fi;
